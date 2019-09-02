@@ -1,7 +1,4 @@
-# active la camera ,
-#repere le visage
-#prends une photo
-#rogne la photo
+# Samuel Schwarcz
 
 import cv2
 import matplotlib.pyplot as plt
