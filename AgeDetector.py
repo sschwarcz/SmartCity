@@ -1,4 +1,4 @@
-
+## Samuel Schwarcz
 import os
 import cv2
 import dlib
@@ -14,7 +14,7 @@ from threading import Thread,Event
 import pyrebase
 
 
-
+# for uploading pictures into the database for the application
 config = {
   "apiKey": "AIzaSyCJOFIBO5g-ZVBNlebfldboRuEYQC-KSRo",
   "authDomain": "smartcity-187de.firebaseapp.com",
@@ -36,7 +36,7 @@ pretrained_model = r"C:\Users\Dell\Desktop\projetFinal\Models\gender.caffemodel"
 
 modhash = '89f56a39a78454e96379348bddd78c0d'
 
-
+#directory in the computer it load the pictures
 pathToDirectory = "C:\\Users\\Dell\\Desktop\\DirPers\\"
 
 class Index():
@@ -86,8 +86,10 @@ class AgeDetector(Thread):
                 Index.age_tot = 0
                 Index.count_of_men=0
                 Index.count_of_women=0
+                #get the pictures of the persons from the directory
                 for person in list:
                     Index.Nmb_of_people+=1
+                    #the adress of one picture
                     name1 = pathToDirectory + person + photoN
                     print(person)
                     if os.path.exists(name1):
@@ -114,7 +116,7 @@ class AgeDetector(Thread):
 
                             # predict ages and genders of the detected faces####################################################################################################################
                             results = model.predict(faces)  ##contien les deux resultats (sexe et age)
-
+                            ######get the gender predicted from the model
                             predicted_genders = results[0]
                             gender = "F" if predicted_genders[i][0] > 0.5 else "M"
                             print(gender)  # imprime le sexe
@@ -122,7 +124,7 @@ class AgeDetector(Thread):
                                 Index.count_of_men+=1
                             else :
                                 Index.count_of_women+=1
-
+                            ####get the age predicted from the model
                             ages = np.arange(0, 101).reshape(101, 1)
                             predicted_ages = results[1].dot(ages).flatten()
                             age = round(predicted_ages[0], 0)
@@ -130,7 +132,8 @@ class AgeDetector(Thread):
                             print("images/"+person+".jpg")
                             print(name1)
                             Index.age_tot+=age
-
+                            
+                            ##all this code is used to upload the new datas into the databases
                             pyrUp= storage1.child("images/"+person+".jpg").put(name1, user['idToken'])
 
                             picUrl = storage1.child("images/"+person+".jpg").get_url(pyrUp['downloadTokens'])
